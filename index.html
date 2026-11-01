@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kitchen Quarter Round Plan</title>
+<style>
+  :root { --ink:#1f2933; --muted:#6b7280; --accent:#c2410c; --line:#e5e7eb; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+         color: var(--ink); margin: 0; background:#fafaf9; line-height:1.45; }
+  main { max-width: 1000px; margin: 0 auto; padding: 32px 24px 64px; }
+  h1 { margin: 0 0 4px; font-size: 28px; }
+  h2 { margin: 40px 0 12px; font-size: 20px; border-bottom: 2px solid var(--line); padding-bottom: 6px; }
+  .sub { color: var(--muted); margin: 0 0 24px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px; }
+  svg { width:100%; height:auto; display:block; }
+  .legend { display:flex; flex-wrap:wrap; gap:18px; font-size:13px; color:var(--muted); margin-top:10px; }
+  .legend span::before { content:""; display:inline-block; width:22px; height:0; vertical-align:middle;
+         margin-right:6px; border-top:4px solid var(--accent); }
+  .legend .gap::before { border-top:2px dashed #9ca3af; }
+  .legend .old::before { border-top:3px dotted #9ca3af; }
+  .legend .door::before { border-top:3px solid #2563eb; }
+  table { width:100%; border-collapse: collapse; font-size:14px; background:#fff; }
+  th, td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); }
+  th { background:#f3f4f6; font-weight:600; }
+  td.num, th.num { text-align:right; white-space:nowrap; font-variant-numeric: tabular-nums; }
+  tfoot td { font-weight:700; border-top:2px solid var(--ink); }
+  .pill { display:inline-block; width:22px; height:22px; line-height:22px; text-align:center; border-radius:50%;
+          background:var(--accent); color:#fff; font-size:12px; font-weight:700; }
+  .note { font-size:13px; color:var(--muted); }
+  .sticks { display:grid; gap:6px; }
+  .stick { display:flex; height:26px; border:1px solid #9ca3af; border-radius:4px; overflow:hidden; background:#f3f4f6; font-size:12px; }
+  .stick div { display:flex; align-items:center; justify-content:center; border-right:1px solid #fff;
+               background:#fed7aa; color:#7c2d12; font-weight:600; white-space:nowrap; overflow:hidden; }
+  .stick .waste { background:repeating-linear-gradient(45deg,#f3f4f6,#f3f4f6 4px,#e5e7eb 4px,#e5e7eb 8px); color:var(--muted); font-weight:400; }
+  ul.tips li { margin-bottom:6px; }
+  ul.check { list-style:none; padding-left:0; margin:0; }
+  ul.check li { margin-bottom:6px; }
+  ul.check label { cursor:pointer; }
+  ul.check input { margin-right:8px; transform:scale(1.15); }
+  ul.check input:checked + span { color:var(--muted); text-decoration:line-through; }
+  h3 { font-size:15px; margin:18px 0 6px; }
+  @media print {
+    body { background:#fff; }
+    main { padding: 0; max-width:none; }
+    .card { border:none; padding:0; }
+    h2 { break-after: avoid; }
+    .pagebreak { break-before: page; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Kitchen Quarter Round Plan</h1>
+  <p class="sub">Top-down view, drawn to scale from the measured lengths. All dimensions in inches,
+     measured along the wall on the kitchen-floor side.</p>
+
+  <div class="card">
+    <svg id="plan" role="img" aria-label="Scaled kitchen floor plan showing quarter round runs"></svg>
+    <div class="legend">
+      <span>New quarter round (numbered piece)</span>
+      <span class="gap">Gap: appliance, no trim</span>
+      <span class="door">Door / opening</span>
+      <span class="old">Existing dining room trim (not replaced)</span>
+    </div>
+    <p class="note">The quarter round lengths are measured. The dishwasher (24"), stove (30"),
+      door widths (32") and the distance between the two runs are standard sizes or estimates, so
+      only the overall layout is approximate.</p>
+  </div>
+
+  <h2>Cut list</h2>
+  <p class="note">Cut each piece so its <strong>back edge</strong> (the flat side against the wall) equals the length shown.
+     On inside corners the back edge is the longer side of the miter; on outside corners it's the shorter side.</p>
+  <table id="cuts">
+    <thead><tr><th>#</th><th>Location</th><th class="num">Length</th><th>End A</th><th>End B</th></tr></thead>
+    <tbody></tbody>
+    <tfoot><tr><td></td><td>Total</td><td class="num" id="total"></td><td colspan="2" id="totalft"></td></tr></tfoot>
+  </table>
+
+  <h2 class="pagebreak">How to cut the 8&prime; sticks</h2>
+  <p class="note">7 sticks at 96" each. Every stick leaves at least 1" for saw cuts and trimming.
+     Stick 7 covers the 16" piece and is a spare for mistakes.</p>
+  <div class="sticks" id="sticks"></div>
+
+  <h2>Shopping list</h2>
+  <p class="note">Trim: <a href="https://www.homedepot.com/p/0-75-in-D-x-0-75-in-W-Composite-Quarter-Round-PVC-White-0268912003/100061329">Home Depot
+     0.75 in. &times; 0.75 in. Composite (PVC) Quarter Round, White</a> (SKU 100061329). It's pre-finished white
+     and waterproof, so no painting or sealing is needed. The trim price ($13.58 per stick) is from the Home Depot listing on Nov 1, 2026. Prices for the nails, caulk and glue are estimates.</p>
+  <table id="shop">
+    <thead><tr><th>Item</th><th>Notes</th><th class="num">Qty</th><th class="num">Each</th><th class="num">Cost</th></tr></thead>
+    <tbody></tbody>
+    <tfoot><tr><td colspan="4">Estimated total (before tax)</td><td class="num" id="grandTotal"></td></tr></tfoot>
+  </table>
+
+  <h2>Project checklist</h2>
+  <p class="note">Tick items off as you go. The checkmarks stay saved in this browser.</p>
+  <ul class="check" id="checklist">
+    <li><h3>Before you buy</h3></li>
+    <li><label><input type="checkbox" data-k="c0"><span>Check the stick length on the listing or the tag (the cut plan assumes 8 ft / 96&quot;)</span></label></li>
+    <li><label><input type="checkbox" data-k="c1"><span>Re-measure any runs you're unsure of, especially the 84&quot; and 79&quot; pieces</span></label></li>
+    <li><label><input type="checkbox" data-k="c2"><span>Make sure you have a miter saw with a fine-tooth blade (60T or more), a brad nailer, a tape measure, a pencil and a caulk gun</span></label></li>
+    <li><h3>Buy</h3></li>
+    <li><label><input type="checkbox" data-k="c3"><span>7 sticks of PVC quarter round, SKU 100061329 (North Greenville: Aisle 24, Bay 004). Sight down each one and skip any that are bowed</span></label></li>
+    <li><label><input type="checkbox" data-k="c4"><span>1-1/4&quot; 18-ga brad nails</span></label></li>
+    <li><label><input type="checkbox" data-k="c5"><span>White siliconized acrylic caulk</span></label></li>
+    <li><label><input type="checkbox" data-k="c6"><span>PVC trim adhesive or CA glue</span></label></li>
+    <li><h3>Prep</h3></li>
+    <li><label><input type="checkbox" data-k="c7"><span>Pull off the old kitchen quarter round. Stop where the dining room trim starts</span></label></li>
+    <li><label><input type="checkbox" data-k="c8"><span>Pull or set any leftover nails, then scrape off old caulk</span></label></li>
+    <li><label><input type="checkbox" data-k="c9"><span>Vacuum along the baseboards</span></label></li>
+    <li><label><input type="checkbox" data-k="c10"><span>Let the PVC sit in the house for a day so it adjusts to the room temperature</span></label></li>
+    <li><h3>Cut and install</h3></li>
+    <li><label><input type="checkbox" data-k="c11"><span>Mark each piece with its number as you cut it, following the stick plan</span></label></li>
+    <li><label><input type="checkbox" data-k="c12"><span>Cut long pieces a little long, then trim them to fit</span></label></li>
+    <li><label><input type="checkbox" data-k="c13"><span>Dry-fit each corner pair before nailing</span></label></li>
+    <li><label><input type="checkbox" data-k="c14"><span>Fit piece 9 before piece 8</span></label></li>
+    <li><label><input type="checkbox" data-k="c15"><span>Cut mitered returns at the dishwasher and stove ends</span></label></li>
+    <li><label><input type="checkbox" data-k="c16"><span>Leave a little clearance at the sliding door track</span></label></li>
+    <li><label><input type="checkbox" data-k="c17"><span>Join piece 11 to the existing dining room trim</span></label></li>
+    <li><label><input type="checkbox" data-k="c18"><span>Glue the outside-corner miters, then nail into the baseboard (not the floor) about every 12&quot;</span></label></li>
+    <li><h3>Finish</h3></li>
+    <li><label><input type="checkbox" data-k="c19"><span>Caulk the top edge gaps, the corners and the nail holes, then wipe smooth</span></label></li>
+    <li><label><input type="checkbox" data-k="c20"><span>Clean up, and keep the leftover pieces for repairs</span></label></li>
+  </ul>
+
+  <h2>Tips</h2>
+  <ul class="tips">
+    <li>Dry-fit each corner pair before nailing. Walls are rarely exactly 90°, so a 44°/46° split may close a gap better than 45°/45°.</li>
+    <li>Nail into the baseboard, not the floor, so floating floors can still move.</li>
+    <li>Use small mitered returns at the dishwasher and stove ends instead of square cuts. They look cleaner and won't snag a mop.</li>
+    <li>At the sliding door, leave the end a little short so it doesn't interfere with the door track.</li>
+    <li>Fit piece 9 (4") before piece 8 (23"), then cut the 23" to fit.</li>
+    <li>Piece 11 meets the existing dining room quarter round. Miter it to the old piece, or trim the old piece back slightly for a clean joint.</li>
+    <li>PVC cuts cleanly with a fine-tooth (60T or more) miter saw blade. Cut slowly so the edges don't melt or chip.</li>
+    <li>PVC expands and contracts with temperature more than wood. Nail about every 12", and glue outside-corner miters with PVC trim adhesive or CA glue so they don't open up.</li>
+    <li>Fill nail holes with white caulk (no sanding or painting needed), and wipe it smooth with a damp finger.</li>
+  </ul>
+</main>
+
+<script>
+// ---------- Geometry (inches; x → right, y → down) ----------
+// side: direction of the kitchen floor from the line (where the label goes)
+const pieces = [
+  { n:1,  len:84, a:[0,0],     b:[84,0],    side:[0,1],  loc:"Top wall, from sliding door",   ea:"Square butt to sliding door", eb:"Inside 45°" },
+  { n:2,  len:53, a:[84,0],    b:[84,53],   side:[-1,0], loc:"Jog down",                      ea:"Inside 45°",  eb:"Outside 45°" },
+  { n:3,  len:27, a:[84,53],   b:[111,53],  side:[0,1],  loc:"Jog across",                    ea:"Outside 45°", eb:"Outside 45°" },
+  { n:4,  len:32, a:[111,53],  b:[111,21],  side:[1,0],  loc:"Jog up",                        ea:"Outside 45°", eb:"Inside 45°" },
+  { n:5,  len:79, a:[111,21],  b:[190,21],  side:[0,1],  loc:"Sink run",                      ea:"Inside 45°",  eb:"Return at dishwasher" },
+  { n:6,  len:16, a:[214,21],  b:[230,21],  side:[0,1],  loc:"After dishwasher",              ea:"Return at dishwasher", eb:"Inside 45°" },
+  { n:7,  len:42, a:[230,21],  b:[230,63],  side:[-1,0], loc:"Down",                          ea:"Inside 45°",  eb:"Outside 45°" },
+  { n:8,  len:23, a:[230,63],  b:[253,63],  side:[0,1],  loc:"Across toward door",            ea:"Outside 45°", eb:"Inside 45° (into jog)" },
+  { n:9,  len:4,  a:[253,63],  b:[253,67],  side:[1,0],  loc:"Small jog to door frame",       ea:"Inside 45°",  eb:"Square butt to casing" },
+  { n:10, len:23, a:[253,99],  b:[253,122], side:[-1,0], loc:"Right wall, between doors",     ea:"Square butt to casing", eb:"Square butt to door trim" },
+  { n:11, len:26, a:[91,124],  b:[91,98],   side:[-1,0], loc:"Up from dining room",           ea:"Meets existing dining room trim", eb:"Outside 45°" },
+  { n:12, len:38, a:[91,98],   b:[129,98],  side:[0,-1], loc:"To stove",                      ea:"Outside 45°", eb:"Return at stove" },
+  { n:13, len:18, a:[159,98],  b:[177,98],  side:[0,-1], loc:"Past stove",                    ea:"Return at stove", eb:"Outside 45°" },
+  { n:14, len:24, a:[177,98],  b:[177,122], side:[1,0],  loc:"Down",                          ea:"Outside 45°", eb:"Inside 45°" },
+  { n:15, len:44, a:[177,122], b:[221,122], side:[0,-1], loc:"To door",                       ea:"Inside 45°",  eb:"Square butt to casing" },
+];
+const gaps = [
+  { a:[190,21], b:[214,21], label:"Dishwasher", side:[0,1] },
+  { a:[129,98], b:[159,98], label:"Stove", side:[0,-1] },
+];
+const doors = [
+  { a:[-34,0],   b:[0,0],     label:"Sliding door", side:[0,-1] },
+  { a:[253,67],  b:[253,99],  label:"Door", side:[1,0] },
+  { a:[221,122], b:[253,122], label:"Door", side:[0,1] },
+];
+const existing = [ { a:[40,124], b:[91,124] } ];
+
+// ---------- Draw ----------
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("plan");
+const pad = { l:48, r:30, t:26, b:36 };
+const minX = -34, maxX = 253, minY = 0, maxY = 124;
+svg.setAttribute("viewBox", `${minX-pad.l} ${minY-pad.t} ${maxX-minX+pad.l+pad.r} ${maxY-minY+pad.t+pad.b}`);
+
+function el(tag, attrs, parent=svg) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  parent.appendChild(e); return e;
+}
+function text(x, y, s, attrs={}) {
+  const t = el("text", { x, y, "text-anchor":"middle", "dominant-baseline":"central",
+    "font-size":4.2, "font-family":"-apple-system, Helvetica, Arial, sans-serif", fill:"#1f2933", ...attrs });
+  t.textContent = s; return t;
+}
+const mid = (a,b) => [(a[0]+b[0])/2, (a[1]+b[1])/2];
+
+// cabinets / walls (non-floor), lightly shaded
+el("polygon", { fill:"#e7e5e4", points:
+  "-34,-14 253,-14 253,63 230,63 230,21 111,21 111,53 84,53 84,0 -34,0" });
+el("polygon", { fill:"#e7e5e4", points:
+  "91,98 177,98 177,122 253,122 253,138 40,138 40,124 91,124" });
+el("rect", { x:253, y:-14, width:12, height:152, fill:"#e7e5e4" });
+text(150, -7, "Cabinets / wall", { fill:"#78716c", "font-size":3.6 });
+text(134, 131, "Cabinets / wall", { fill:"#78716c", "font-size":3.6 });
+text(150, 80, "Kitchen floor", { fill:"#a8a29e", "font-size":5, "font-style":"italic" });
+text(10, 110, "Dining room", { fill:"#a8a29e", "font-size":5, "font-style":"italic" });
+
+// existing trim
+existing.forEach(s => el("line", { x1:s.a[0], y1:s.a[1], x2:s.b[0], y2:s.b[1],
+  stroke:"#9ca3af", "stroke-width":1.2, "stroke-dasharray":"0.5 1.8", "stroke-linecap":"round" }));
+text(62, 128.5, "existing — not replaced", { fill:"#6b7280", "font-size":3 });
+
+// appliance gaps
+gaps.forEach(g => {
+  el("line", { x1:g.a[0], y1:g.a[1], x2:g.b[0], y2:g.b[1], stroke:"#9ca3af", "stroke-width":0.6, "stroke-dasharray":"2 1.5" });
+  const [mx,my] = mid(g.a,g.b);
+  text(mx + g.side[0]*5, my + g.side[1]*5, g.label, { fill:"#6b7280", "font-size":3.4 });
+});
+
+// doors
+doors.forEach(d => {
+  el("line", { x1:d.a[0], y1:d.a[1], x2:d.b[0], y2:d.b[1], stroke:"#2563eb", "stroke-width":1.4 });
+  const [mx,my] = mid(d.a,d.b);
+  const vertical = d.a[0] === d.b[0];
+  text(mx + d.side[0]*5, my + d.side[1]*5, d.label, { fill:"#2563eb", "font-size":3.4,
+    transform: vertical ? `rotate(90 ${mx + d.side[0]*5} ${my + d.side[1]*5})` : "" });
+});
+
+// quarter round pieces
+pieces.forEach(p => {
+  el("line", { x1:p.a[0], y1:p.a[1], x2:p.b[0], y2:p.b[1], stroke:"#c2410c", "stroke-width":1.6, "stroke-linecap":"square" });
+  const [mx,my] = mid(p.a,p.b);
+  const off = p.len < 10 ? 4 : 5;
+  const lx = mx + p.side[0]*off, ly = my + p.side[1]*off;
+  text(lx, ly, `${p.len}"`, { "font-weight":700 });
+  // piece number bubble, offset further along the label direction
+  const bx = lx + (p.side[0] ? p.side[0]*7 : 0), by = ly + (p.side[1] ? p.side[1]*6 : 0);
+  el("circle", { cx:bx, cy:by, r:2.6, fill:"#c2410c" });
+  text(bx, by + 0.1, p.n, { fill:"#fff", "font-size":2.9, "font-weight":700 });
+});
+
+// scale bar: 2 ft
+const sbx = minX, sby = maxY + 24;
+el("line", { x1:sbx, y1:sby, x2:sbx+24, y2:sby, stroke:"#1f2933", "stroke-width":0.6 });
+[0,12,24].forEach(x => el("line", { x1:sbx+x, y1:sby-1.5, x2:sbx+x, y2:sby+1.5, stroke:"#1f2933", "stroke-width":0.6 }));
+text(sbx+12, sby+4, "2 ft", { "font-size":3.2 });
+
+// ---------- Cut list ----------
+const tb = document.querySelector("#cuts tbody");
+let total = 0;
+pieces.forEach(p => {
+  total += p.len;
+  tb.insertAdjacentHTML("beforeend",
+    `<tr><td><span class="pill">${p.n}</span></td><td>${p.loc}</td><td class="num">${p.len}"</td><td>${p.ea}</td><td>${p.eb}</td></tr>`);
+});
+document.getElementById("total").textContent = `${total}"`;
+document.getElementById("totalft").textContent = `≈ ${(total/12).toFixed(1)} ft`;
+
+// ---------- Stick layout ----------
+const sticks = [[1,9],[5],[2,12],[15,7],[4,3,11],[14,8,10,13],[6]];
+const byN = Object.fromEntries(pieces.map(p => [p.n, p]));
+const sdiv = document.getElementById("sticks");
+sticks.forEach((s, i) => {
+  const used = s.reduce((a,n) => a + byN[n].len, 0);
+  const segs = s.map(n => `<div style="width:${byN[n].len/96*100}%" title='#${n} · ${byN[n].len}"'>${byN[n].len < 10 ? '#'+n : '#'+n+' · '+byN[n].len+'"'}</div>`).join("");
+  const waste = 96 - used;
+  sdiv.insertAdjacentHTML("beforeend",
+    `<div style="display:flex;align-items:center;gap:8px"><strong style="width:58px;font-size:13px">Stick ${i+1}</strong>
+     <div class="stick" style="flex:1">${segs}<div class="waste" style="width:${waste/96*100}%">${waste}" left</div></div></div>`);
+});
+
+// ---------- Shopping list (trim price from HD listing 2026-11-01; others estimated — edit here) ----------
+const STICKS = 7;
+const shop = [
+  { name:"Composite PVC quarter round, white, 3/4\" × 3/4\" × 8′", notes:"Home Depot SKU 100061329 (store SKU 248350). 6 needed + 1 spare. North Greenville store: Aisle 24, Bay 004.", qty:STICKS, each:13.58, exact:true },
+  { name:"18-ga brad nails, 1-1/4\"",                         notes:"For a brad nailer. Use 1\" finish nails if nailing by hand.", qty:1, each:8 },
+  { name:"White siliconized acrylic caulk",                   notes:"Top edge gaps, corners, and nail holes.", qty:1, each:6 },
+  { name:"PVC trim adhesive or CA glue",                      notes:"Glue the outside-corner miters.", qty:1, each:8 },
+];
+const fmt = n => "$" + n.toFixed(2).replace(/\.00$/, "");
+const tbody = document.querySelector("#shop tbody");
+let grand = 0;
+shop.forEach(i => { const c = i.qty * i.each; grand += c; tbody.insertAdjacentHTML("beforeend",
+  `<tr><td>${i.name}</td><td class="note">${i.notes}</td><td class="num">${i.qty}</td><td class="num">${i.exact?"":"≈ "}${fmt(i.each)}</td><td class="num">${i.exact?"":"≈ "}${fmt(c)}</td></tr>`); });
+document.getElementById("grandTotal").innerHTML = `<strong>≈ ${fmt(grand)}</strong>`;
+// ---------- Checklist persistence ----------
+document.querySelectorAll("#checklist input").forEach(cb => {
+  const k = "qr-" + cb.dataset.k;
+  try { cb.checked = localStorage.getItem(k) === "1"; } catch (e) {}
+  cb.addEventListener("change", () => { try { localStorage.setItem(k, cb.checked ? "1" : "0"); } catch (e) {} });
+});
+</script>
+</body>
+</html>
